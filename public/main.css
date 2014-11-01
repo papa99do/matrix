@@ -1,0 +1,35 @@
+html { overflow-y:scroll; }
+body { padding-top:10px; }
+
+th.label-column {
+	min-width: 300px;
+	width: 300px
+}
+
+td.label-column {
+	font-weight: bold;
+}
+
+th.content-column {
+	min-width: 100px;
+	border: 1px solid black;
+	background-color: #ffc;
+}
+
+.modal-header .close {
+	margin-right: 10px;
+}
+
+#alert-area {
+    position: fixed;
+    z-index: 2000;
+    display: block;
+    top: 100px;                                                                                                  
+    width: 300px;                                                                                                
+    left: 50%;                                                                                                   
+    margin-left:-150px;                                                                                          
+}
+
+#matrixEditor {
+	margin-bottom: 10px;
+}

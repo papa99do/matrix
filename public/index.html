@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Matrix</title>
+	
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.css">
+	<link rel="stylesheet" href="//cdn.datatables.net/fixedcolumns/3.0.2/css/dataTables.fixedColumns.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">
+	<link rel="stylesheet" href="/main.css" media="all">
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+	<script src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.js"></script>
+	<script src="//cdn.datatables.net/fixedcolumns/3.0.2/js/dataTables.fixedColumns.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
+	<script src="/core.js"></script>
+	<script src="/matrix.js"></script>
+	<script src="/content.js"></script>
+
+</head>
+<body>
+	<div id="matrixEditor" class="container matrix-edit">
+		<div class="row">
+			<div class="col-md-6">	
+				<div class="input-group">
+					<span class="input-group-addon">Row</span>
+					<input type="text" class="form-control" placeholder="Row label" id="add-row" />
+					<span class="input-group-btn">
+					    <button class="btn btn-default" type="button" onclick="addRow($('#add-row').val())">Add</button>
+					</span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="input-group">
+					<span class="input-group-addon">Column</span>
+					<input type="text" class="form-control" placeholder="Column label" id="add-col" />
+					<span class="input-group-btn">
+					    <button class="btn btn-default" type="button" onclick="addColumn($('#add-col').val())">Add</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="matrix-container"></div>
+	
+	<!-- Code Content Modal -->
+	<div class="modal fade" id="content-modal" tabindex="-1" role="dialog" aria-labelledby="contentModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+			<button type="button" class="btn btn-primary pull-right" id="edit-content-btn" onclick="toggleContentEditMode(true)">Edit</button>
+			<button type="button" class="btn btn-primary pull-right" id="save-content-btn" onclick="saveContent()">Save</button>
+			
+	        <button type="button" class="close pull-left" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	        <h4 class="modal-title" id="contentModalLabel">Content</h4>
+	      </div>
+	      <div class="modal-body">
+	        <textarea class="form-control" rows="10" id="content-markdown"></textarea>
+			<div id="content-html"></div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Alert -->
+	<div id="alert-area"></div>
+</body>
+</html>
