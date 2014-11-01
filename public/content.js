@@ -1,4 +1,4 @@
-var currentContent;
+var currentContent, $selectedCell;
 var converter = new Showdown.converter();
 
 function convertContentToHtml() {
@@ -8,7 +8,8 @@ function convertContentToHtml() {
 	});
 }
 
-function showContent(row, col, contentId) {
+function showContent(elem, row, col, contentId) {
+	$selectedCell = $(elem).parent();
 	if (contentId) {
 		$.get('/api/contents/' + contentId, function(data) {
 			currentContent = data;
@@ -45,6 +46,11 @@ function saveContent() {
 		
 		if (!currentContent._id) {
 			updateContentMap(content);
+			$selectedCell.html(contentColumn({
+				row: content.row,
+				col: content.column,
+				contentId: content._id
+			}));
 		}
 		currentContent = content;
 		

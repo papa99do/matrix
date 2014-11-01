@@ -112,7 +112,7 @@ function labelColumn(rowLabel) {
 
 function contentColumn(data) {
 	var style = data.contentId ? 'glyphicon-star' : 'glyphicon-star-empty';
-	var template = '<a href="#" onclick="showContent(';
+	var template = '<a href="#" onclick="showContent(this, ';
 	template += "'" + data.row + "', '" + data.col + "'";
 	if (data.contentId) template += ", '" + data.contentId + "'";
 	template += ')"><i class="glyphicon ' + style + '"></i></a>';
