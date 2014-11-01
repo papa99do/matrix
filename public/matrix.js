@@ -1,4 +1,5 @@
-var currentMatrix; 
+var currentMatrix, contentMap;
+var oldMatrix; 
 
 function addRow(rowLabel, index) {
 	addElement(currentMatrix.rows, rowLabel, index);
@@ -40,10 +41,6 @@ function moveColumnRight(label) {
 	renderMatrix();
 }
 
-function hasContent(row, column) {
-	return !!(contentMap[row] && contentMap[row][column]);
-}
-
 function createMatrixTable(matrixData) {
 	var matrix = {header: [], data: []};
 	$(matrixData.columns).each(function(i, col) {matrix.header.push(col);});
@@ -53,7 +50,7 @@ function createMatrixTable(matrixData) {
 			rowData.push({
 				row: row, 
 				col: col, 
-				contentId: matrixData.contentMap[row] && matrixData.contentMap[row][column]
+				contentId: contentMap[row] && contentMap[row][column]
 			});
 		});
 		matrix.data.push(rowData);
@@ -83,7 +80,8 @@ function getColumnConfig(header) {
 }
 
 function labelColumnHeader() {
-	return '<button id="editMatrixBtn" class="btn btn-primary" onclick="editMatrix()">Edit</button>\
+	return '<button class="matrix-non-edit btn btn-primary" onclick="editMatrix()">Edit</button>\
+			<button class="matrix-edit btn" onclick="cancelEdit()">Cancel</button>\
 	        <button class="matrix-edit btn btn-primary" onclick="saveMatrix()">Save</button>';
 }
 
@@ -123,13 +121,23 @@ function contentColumn(data) {
 }
 
 function editMatrix() {
+	oldMatrix = $.extend(true, {}, currentMatrix);
 	$('.matrix-edit').show();
-	$('#editMatrixBtn').hide();
+	$('.matrix-non-edit').hide();
+}
+
+function hideEditButton() {
+	$('.matrix-non-edit').hide();
 }
 
 function hideMatrixEditor() {
 	$('.matrix-edit').hide();
-	$('#editMatrixBtn').show();
+	$('.matrix-non-edit').show();
+}
+
+function cancelEdit() {
+	currentMatrix = oldMatrix;
+	renderMatrix({readOnly: true});
 }
 
 function saveMatrix() {
@@ -146,7 +154,7 @@ function newAlert(type, message) {
 }
 
 
-function renderMatrix() {
+function renderMatrix(option) {
 	
 	var matrix = createMatrixTable(currentMatrix);
 	
@@ -166,6 +174,12 @@ function renderMatrix() {
 			autoWidth: false
 	    } );
 	new $.fn.dataTable.FixedColumns( table );
+	
+	if (option && option.readOnly) {
+		hideMatrixEditor();
+	} else {
+		hideEditButton();
+	}
 }
 
 function generateContentMap(contents) {
@@ -184,9 +198,9 @@ function getMatrixName() {
 $(document).ready(function() {
 	$.get('/api/matrixes/' + getMatrixName(), function(data) {
 		currentMatrix = data;
-		currentMatrix.contentMap = generateContentMap(data.contents);
-		console.log(currentMatrix);
-		renderMatrix();
-		hideMatrixEditor();
+		contentMap = generateContentMap(data.contents);
+		delete currentMatrix.contents;
+
+		renderMatrix({readOnly: true});
 	});
 });
