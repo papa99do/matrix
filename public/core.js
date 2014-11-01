@@ -40,3 +40,8 @@ function moveElement(array, elem, offset) {
 	array.splice(newLocation, 0, elem);
 	console.log('"%s" moved with offset %d, and the new array is now %s', elem, offset, array.join());
 }
+
+function newAlert(type, message) {
+    $("#alert-area").append($("<div class='alert alert-" + type + " fade in' data-alert><p> " + message + " </p></div>"));
+    $(".alert").delay(2000).fadeOut("slow", function () { $(this).remove(); });
+}

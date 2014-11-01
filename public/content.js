@@ -1,3 +1,4 @@
+var currentContent;
 var converter = new Showdown.converter();
 
 function convertContentToHtml() {
@@ -10,9 +11,11 @@ function convertContentToHtml() {
 function showContent(row, col, contentId) {
 	if (contentId) {
 		$.get('/api/contents/' + contentId, function(data) {
+			currentContent = data;
 			show(row, col, data.content);
 		});
 	} else {
+		currentContent = {row: row, column: col, matrix_id: currentMatrix._id};
 		show(row, col, '');
 	}
 }
@@ -31,7 +34,32 @@ function show(row, col, content) {
 
 function saveContent() {
 	convertContentToHtml();
-	toggleContentEditMode(false);
+	currentContent.content = $('#content-markdown').val();
+	var url = '/api/contents';
+	if (currentContent._id) {
+		url = url + '/' + currentContent._id; 
+	}
+	
+	$.post(url, currentContent)
+	.done(function(content) {
+		
+		if (!currentContent._id) {
+			updateContentMap(content);
+		}
+		currentContent = content;
+		
+		newAlert('success', 'Content saved!');
+		toggleContentEditMode(false);
+	})
+	.fail(function() {
+		newAlert('danger', 'ERROR!');
+	});
+	
+}
+
+function updateContentMap(content) {
+	if (!contentMap[content.row]) contentMap[content.row] = {};
+	contentMap[content.row][content.column] = content._id;
 }
 
 function toggleContentEditMode(editMode) {

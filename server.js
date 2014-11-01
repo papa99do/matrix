@@ -40,10 +40,9 @@ router.route('/matrixes/:name')
 		if (err) handleError(err, res);
 		console.log(matrix);
 		
-		Content.find({matrix: matrix.name}).select('row column').exec(function(err, contents) {
+		Content.find({matrix_id: matrix._id}).select('row column').exec(function(err, contents) {
 			if (err) handleError(err, res);
-			matrix.contents = contents;
-			handleResult(matrix, res);
+			handleResult({matrix: matrix, contents: contents}, res);
 		});
 	});
 })
@@ -69,7 +68,29 @@ router.route('/contents/:id')
 		if (err) handleError(err, res);
 		handleResult(content, res);
 	});
-});
+})
+.post(function(req, res) {
+	Content.findById(req.params.id, function(err, content) {
+		if (err) handleError(err, res);
+		
+		content.content = req.body.content;
+		
+		content.save(function(err) {
+			if(err) handleError(err, res);
+			handleResult({message: 'Content updated!'}, res);
+		});
+	});
+})
+;
+
+router.route('/contents')
+.post(function(req, res) {
+	console.log('Saving content: ', req.body);
+	Content.create(req.body, function(err, content) {
+		if(err) handleError(err, res);
+		handleResult(content, res);
+	});
+})
 
 app.use('/api', router);
 

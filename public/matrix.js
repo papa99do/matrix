@@ -50,7 +50,7 @@ function createMatrixTable(matrixData) {
 			rowData.push({
 				row: row, 
 				col: col, 
-				contentId: contentMap[row] && contentMap[row][column]
+				contentId: contentMap[row] && contentMap[row][col]
 			});
 		});
 		matrix.data.push(rowData);
@@ -147,13 +147,6 @@ function saveMatrix() {
 		.always(function() {hideMatrixEditor();});
 }
 
-
-function newAlert(type, message) {
-    $("#alert-area").append($("<div class='alert alert-" + type + " fade in' data-alert><p> " + message + " </p></div>"));
-    $(".alert").delay(2000).fadeOut("slow", function () { $(this).remove(); });
-}
-
-
 function renderMatrix(option) {
 	
 	var matrix = createMatrixTable(currentMatrix);
@@ -183,9 +176,9 @@ function renderMatrix(option) {
 }
 
 function generateContentMap(contents) {
-	var map = [];
+	var map = {};
 	$(contents).each(function(index, content) {
-		if (!map[content.row]) map[content.row] = [];
+		if (!map[content.row]) map[content.row] = {};
 		map[content.row][content.column] = content._id;
 	});
 	return map;
@@ -197,10 +190,9 @@ function getMatrixName() {
 
 $(document).ready(function() {
 	$.get('/api/matrixes/' + getMatrixName(), function(data) {
-		currentMatrix = data;
+		console.log(data);
+		currentMatrix = data.matrix;
 		contentMap = generateContentMap(data.contents);
-		delete currentMatrix.contents;
-
 		renderMatrix({readOnly: true});
 	});
 });
