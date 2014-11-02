@@ -188,7 +188,7 @@ function generateContentMap(contents) {
 }
 
 function getMatrixName() {
-	return 'polyglot-coder';
+	return location.pathname.slice(1) || 'polyglot-coder';
 }
 
 $(document).ready(function() {

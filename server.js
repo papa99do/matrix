@@ -40,10 +40,14 @@ router.route('/matrixes/:name')
 		if (err) handleError(err, res);
 		console.log(matrix);
 		
-		Content.find({matrix_id: matrix._id}).select('row column').exec(function(err, contents) {
-			if (err) handleError(err, res);
-			handleResult({matrix: matrix, contents: contents}, res);
-		});
+		if (!matrix) {
+			handleResult({matrix: {name: req.params.name, rows:[], columns:[]}, contents: []}, res);
+		} else {
+			Content.find({matrix_id: matrix._id}).select('row column').exec(function(err, contents) {
+				if (err) handleError(err, res);
+				handleResult({matrix: matrix, contents: contents}, res);
+			});
+		}
 	});
 })
 .post(function(req, res) {
@@ -52,6 +56,7 @@ router.route('/matrixes/:name')
 	Matrix.findOne({name: req.params.name}, function(err, matrix) {
 		if (err) handleError(err, res);
 		
+		if (!matrix) matrix = { name: req.body.name };
 		matrix.rows = req.body.rows;
 		matrix.columns = req.body.columns;
 		
@@ -80,8 +85,7 @@ router.route('/contents/:id')
 			handleResult({message: 'Content updated!'}, res);
 		});
 	});
-})
-;
+});
 
 router.route('/contents')
 .post(function(req, res) {
@@ -90,9 +94,14 @@ router.route('/contents')
 		if(err) handleError(err, res);
 		handleResult(content, res);
 	});
-})
+});
 
 app.use('/api', router);
+
+app.get('*', function(req, res) {
+	res.sendfile('public/index.html');
+});
+
 
 // listen (start app with node server.js) ======================================
 app.listen(8080);
