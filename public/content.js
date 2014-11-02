@@ -9,6 +9,11 @@ function convertContentToHtml() {
 }
 
 function showContent(elem, row, col, contentId) {
+	if (!currentMatrix._id) {
+		newAlert('danger', 'Please save the current matrix first!');
+		return;
+	}
+	
 	$selectedCell = $(elem).parent();
 	if (contentId) {
 		$.get('/api/contents/' + contentId, function(data) {

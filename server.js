@@ -56,13 +56,13 @@ router.route('/matrixes/:name')
 	Matrix.findOne({name: req.params.name}, function(err, matrix) {
 		if (err) handleError(err, res);
 		
-		if (!matrix) matrix = { name: req.body.name };
+		if (!matrix) matrix = new Matrix({ name: req.body.name });
 		matrix.rows = req.body.rows;
 		matrix.columns = req.body.columns;
 		
-		matrix.save(function(err) {
+		matrix.save(function(err, savedMatrix) {
 			if(err) handleError(err, res);
-			handleResult({message: 'Matrix updated!'}, res);
+			handleResult(savedMatrix, res);
 		});
 	});
 });
@@ -90,9 +90,17 @@ router.route('/contents/:id')
 router.route('/contents')
 .post(function(req, res) {
 	console.log('Saving content: ', req.body);
-	Content.create(req.body, function(err, content) {
+	
+	var content = new Content({
+		matrix_id: req.body.matrix_id,
+		row: req.body.row,
+		column: req.body.column,
+		content: req.body.content
+	});
+	
+	content.save(function(err, savedContent) {
 		if(err) handleError(err, res);
-		handleResult(content, res);
+		handleResult(savedContent, res);
 	});
 });
 

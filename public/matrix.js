@@ -145,7 +145,10 @@ function cancelEdit() {
 
 function saveMatrix() {
 	$.post('/api/matrixes/' + currentMatrix.name, currentMatrix)
-		.done(function(data) {newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');})
+		.done(function(matrix) {
+			currentMatrix = matrix;
+			newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');
+		})
 		.fail(function(err) {newAlert('danger', '<strong>ERROR!</strong>'); console.log(err);})
 		.always(function() {hideMatrixEditor();});
 }

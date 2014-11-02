@@ -1,6 +1,6 @@
 function addElement(array, elem, index) {
 	// ensure uniqueness
-	if (array.indexOf(elem) > 0) {
+	if (array.indexOf(elem) >= 0) {
 		return;
 	}
 	if (index && index < rows.length) {
