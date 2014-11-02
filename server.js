@@ -10,7 +10,9 @@ var Content    = require('./app/models/content');
 
 // configuration =================
 
-mongoose.connect('mongodb://localhost:27017/matrix');
+var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost:27017/matrix';
+
+mongoose.connect(mongoUrl);
 mongoose.set('debug', true)
 
 app.use(express.static(__dirname + '/public')); 				// set the static files location /public/img will be /img for users
