@@ -80,9 +80,12 @@ function getColumnConfig(header) {
 }
 
 function labelColumnHeader() {
-	return '<button class="matrix-non-edit btn btn-primary" onclick="editMatrix()">Edit</button>\
-			<button class="matrix-edit btn" onclick="cancelEdit()">Cancel</button>\
-	        <button class="matrix-edit btn btn-primary" onclick="saveMatrix()">Save</button>';
+	return '<span id="matrixName">' +currentMatrix.name + '</span>' +
+			'<span class="pull-right"> \
+			  <button class="matrix-non-edit btn btn-sm btn-primary" onclick="editMatrix()">Edit</button>\
+			  <button class="matrix-edit btn btn-sm" onclick="cancelEdit()">Cancel</button>\
+	          <button class="matrix-edit btn btn-sm btn-primary" onclick="saveMatrix()">Save</button>\
+			</span>';
 }
 
 function contentColumnHeader(columnLabel) {
@@ -112,7 +115,7 @@ function labelColumn(rowLabel) {
 
 function contentColumn(data) {
 	var style = data.contentId ? 'glyphicon-star' : 'glyphicon-star-empty';
-	var template = '<a href="#" onclick="showContent(this, ';
+	var template = '<a class="content-link" href="#" onclick="showContent(this, ';
 	template += "'" + data.row + "', '" + data.col + "'";
 	if (data.contentId) template += ", '" + data.contentId + "'";
 	template += ')"><i class="glyphicon ' + style + '"></i></a>';

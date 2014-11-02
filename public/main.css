@@ -3,17 +3,31 @@ body { padding-top:10px; }
 
 th.label-column {
 	min-width: 300px;
-	width: 300px
+	width: 300px;
+	border: 1px solid black;
+	background-color: #fcf;
+	text-transform: uppercase;
 }
 
 td.label-column {
 	font-weight: bold;
+	border: 1px solid black;
+	background-color: #cff;
+}
+
+.content-column {
+	text-align: center;
 }
 
 th.content-column {
 	min-width: 100px;
 	border: 1px solid black;
 	background-color: #ffc;
+}
+
+a.content-link {
+    display:block;
+    width:100%;
 }
 
 .modal-header .close {
