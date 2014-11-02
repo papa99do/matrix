@@ -60,8 +60,11 @@
 	  <div class="modal-dialog modal-lg">
 	    <div class="modal-content">
 	      <div class="modal-header">
-			<button type="button" class="btn btn-primary pull-right" id="edit-content-btn" onclick="toggleContentEditMode(true)">Edit</button>
-			<button type="button" class="btn btn-primary pull-right" id="save-content-btn" onclick="saveContent()">Save</button>
+			<span class="pull-right">
+				<button type="button" class="btn btn-default btn-sm" id="edit-content-btn" onclick="toggleContentEditMode(true)">Edit</button>
+				<button type="button" class="btn btn-default btn-sm" id="preview-content-btn" onclick="previewContent()">Preview</button>
+				<button type="button" class="btn btn-primary btn-sm" id="save-content-btn" onclick="saveContent()">Save</button>
+			</span>
 			
 	        <button type="button" class="close pull-left" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 	        <h4 class="modal-title" id="contentModalLabel">Content</h4>

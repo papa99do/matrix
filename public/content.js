@@ -68,16 +68,24 @@ function updateContentMap(content) {
 	contentMap[content.row][content.column] = content._id;
 }
 
+function previewContent() {
+	convertContentToHtml();
+	toggleContentEditMode(false);
+	$('#save-content-btn').show();
+}
+
 function toggleContentEditMode(editMode) {
 	if (editMode) {
 		$('#content-html').hide();
 		$('#content-markdown').show();		
 		$('#edit-content-btn').hide();
 		$('#save-content-btn').show();
+		$('#preview-content-btn').show();
 	} else {
 		$('#content-html').show();
 		$('#content-markdown').hide();		
 		$('#edit-content-btn').show();
 		$('#save-content-btn').hide();
+		$('#preview-content-btn').hide();
 	}
 }
