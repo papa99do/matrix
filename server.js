@@ -9,6 +9,7 @@ var Matrix     = require('./app/models/matrix');
 var Content    = require('./app/models/content');
 
 // configuration =================
+console.log(process.env);
 
 var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost:27017/matrix';
 
@@ -114,5 +115,6 @@ app.get('*', function(req, res) {
 
 
 // listen (start app with node server.js) ======================================
-app.listen(8080);
-console.log("App listening on port 8080");
+var port = process.env.PORT || 8080;
+app.listen(port);
+console.log("App listening on port " + port);
