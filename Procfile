@@ -1,1 +1,1 @@
-web: echo "PORT=${PORT} MONGOHQ_URL=${MONGOHQ_URL}"
+web: node server.js
