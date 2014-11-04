@@ -1,0 +1,7 @@
+v0.2.0 (TBD)
+* Access row/column by id, allow change of row/column label
+
+
+v0.1.0 (2014-11-03)
+* Edit matrix: add/remove/move rows/columns
+* Edit and view markdown content
