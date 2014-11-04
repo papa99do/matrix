@@ -1,43 +1,90 @@
 var currentMatrix, contentMap;
 var oldMatrix; 
+var lastPopup;
 
 function addRow(rowLabel, index) {
-	addElement(currentMatrix.rows, rowLabel, index);
+	var result = addElement(currentMatrix.rows, rowLabel, currentMatrix.nextRowId++, index);
+	if (result === 0) newAlert('danger', 'Error when adding this row, please try again'); 
+	renderMatrix();
+}
+
+function addAfterRow(rowId, newRowLabel) {
+	console.log(rowId, newRowLabel);
+	
+	if (!rowId || !newRowLabel) return;
+	var index = indexOf(currentMatrix.rows, rowId);
+	var result = addElement(currentMatrix.rows, newRowLabel, currentMatrix.nextRowId++, index + 1);
+	if (result === 0) newAlert('danger', 'Error when adding this row, please try again'); 
+	if (lastPopup) $(lastPopup).popover('hide');
+	
 	renderMatrix();
 }
 
 function addColumn(columnLabel, index) {
-	addElement(currentMatrix.columns, columnLabel, index);
+	var result = addElement(currentMatrix.columns, columnLabel, currentMatrix.nextColumnId++, index);
+	if (result === 0) newAlert('danger', 'Error when adding this column, please try again');
 	renderMatrix();
 }
 
-function removeRow(rowLabel) {
-	removeElement(currentMatrix.rows, rowLabel);
+function addAfterColumn(columnId, newColumnLabel) {
+	console.log(columnId, newColumnLabel);
+	
+	if (!columnId || !newColumnLabel) return;
+	var index = indexOf(currentMatrix.columns, columnId);
+	var result = addElement(currentMatrix.columns, newColumnLabel, currentMatrix.nextColumnId++, index + 1);
+	if (lastPopup) $(lastPopup).popover('hide');
+	
+	if (result === 0) newAlert('danger', 'Error when adding this column, please try again');
 	renderMatrix();
 }
 
-function removeColumn(columnLabel) {
-	removeElement(currentMatrix.columns, columnLabel);
+function removeRow(rowId) {
+	if (currentMatrix.rows.length === 1) {
+		newAlert('danger', 'Cannot remove the last row!');
+		return;
+	}
+	removeElement(currentMatrix.rows, rowId);
 	renderMatrix();
 }
 
-function moveRowUp(label) {
-	moveElement(currentMatrix.rows, label, -1);
+function removeColumn(columnId) {
+	if (currentMatrix.columns.length === 1) {
+		newAlert('danger', 'Cannot remove the last column!');
+		return;
+	}
+	removeElement(currentMatrix.columns, columnId);
 	renderMatrix();
 }
 
-function moveRowDown(label) {
-	moveElement(currentMatrix.rows, label, 1);
+function moveRowUp(rowId) {
+	moveElement(currentMatrix.rows, rowId, -1);
 	renderMatrix();
 }
 
-function moveColumnLeft(label) {
-	moveElement(currentMatrix.columns, label, -1);
+function moveRowDown(rowId) {
+	moveElement(currentMatrix.rows, rowId, 1);
 	renderMatrix();
 }
 
-function moveColumnRight(label) {
-	moveElement(currentMatrix.columns, label, 1);
+function moveColumnLeft(columnId) {
+	moveElement(currentMatrix.columns, columnId, -1);
+	renderMatrix();
+}
+
+function moveColumnRight(columnId) {
+	moveElement(currentMatrix.columns, columnId, 1);
+	renderMatrix();
+}
+
+function renameRow(rowId, newLabel) {
+	changeElement(currentMatrix.rows, rowId, newLabel);
+	if (lastPopup) $(lastPopup).popover('hide');
+	renderMatrix();
+}
+
+function renameColumn(columnId, newLabel) {
+	changeElement(currentMatrix.columns, columnId, newLabel);
+	if (lastPopup) $(lastPopup).popover('hide');
 	renderMatrix();
 }
 
@@ -88,29 +135,33 @@ function labelColumnHeader() {
 			</span>';
 }
 
-function contentColumnHeader(columnLabel) {
+function contentColumnHeader(column) {
 	var template = ' \
 		<span>$columnLabel</span> \
 		<span class="matrix-edit pull-right"> \
-		  <a href="#" onclick="removeColumn(\'$columnLabel\')"><i class="glyphicon glyphicon-minus"></i></a> \
-		  <a href="#" onclick="moveColumnLeft(\'$columnLabel\')"><i class="glyphicon glyphicon-chevron-left"></i></a> \
-		  <a href="#" onclick="moveColumnRight(\'$columnLabel\')"><i class="glyphicon glyphicon-chevron-right"></i></a> \
+		  <a href="#" onclick="editColumn(event, this, $columnId, \'$columnLabel\')"><i class="glyphicon glyphicon-pencil"></i></a> \
+		  <a href="#" onclick="newColumnAfter(event, this, $columnId)"><i class="glyphicon glyphicon-plus"></i></a> \
+		  <a href="#" onclick="removeColumn($columnId)"><i class="glyphicon glyphicon-minus"></i></a> \
+		  <a href="#" onclick="moveColumnLeft($columnId)"><i class="glyphicon glyphicon-chevron-left"></i></a> \
+		  <a href="#" onclick="moveColumnRight($columnId)"><i class="glyphicon glyphicon-chevron-right"></i></a> \
 		</span> \
 	';
-	return template.replace(/\$columnLabel/g, columnLabel);
+	return template.replace(/\$columnLabel/g, column.label).replace(/\$columnId/g, column.id);
 }
 
-function labelColumn(rowLabel) {
+function labelColumn(row) {
 	var template = ' \
 		<span>$rowLabel</span> \
 		<span class="matrix-edit pull-right"> \
-		  <a href="#" onclick="removeRow(\'$rowLabel\')"><i class="glyphicon glyphicon-minus"></i></a> \
-		  <a href="#" onclick="moveRowUp(\'$rowLabel\')"><i class="glyphicon glyphicon-chevron-up"></i></a> \
-		  <a href="#" onclick="moveRowDown(\'$rowLabel\')"><i class="glyphicon glyphicon-chevron-down"></i></a> \
+		  <a href="#" rel onclick="editRow(event, this, $rowId, \'$rowLabel\')"><i class="glyphicon glyphicon-pencil"></i></a> \
+		  <a href="#" onclick="newRowAfter(event, this, $rowId)"><i class="glyphicon glyphicon-plus"></i></a> \
+		  <a href="#" onclick="removeRow($rowId)"><i class="glyphicon glyphicon-minus"></i></a> \
+		  <a href="#" onclick="moveRowUp($rowId)"><i class="glyphicon glyphicon-chevron-up"></i></a> \
+		  <a href="#" onclick="moveRowDown($rowId)"><i class="glyphicon glyphicon-chevron-down"></i></a> \
 		</span> \
 	';
 	
-	return template.replace(/\$rowLabel/g, rowLabel);
+	return template.replace(/\$rowLabel/g, row.label).replace(/\$rowId/g, row.id);
 }
 
 function contentColumn(data) {
@@ -121,6 +172,90 @@ function contentColumn(data) {
 	template += ')"><i class="glyphicon ' + style + '"></i></a>';
 	
 	return template;
+}
+
+function editRow(event, elem, rowId, rowLabel) {
+	stopPropagation(event);
+	
+	if (lastPopup && elem !== lastPopup) $(lastPopup).popover('hide');
+	
+	$(elem).popover({
+		html: true,
+		trigger: 'focus',
+		placement: 'right',
+		container: 'body',
+		title: $("#edit-row-popover-head").html(),
+		content: $("#edit-row-popover-content").html().replace(/\$rowId/g, rowId).replace(/\$rowLabel/g, rowLabel)
+	}).popover('toggle');
+	
+	lastPopup = elem;
+	
+	$('.popover').click(function(event) {
+		stopPropagation(event);
+	});
+}
+
+function newRowAfter(event, elem, rowId) {
+	stopPropagation(event);
+	
+	if (lastPopup && elem !== lastPopup) $(lastPopup).popover('hide');
+	
+	$(elem).popover({
+		html: true,
+		trigger: 'focus',
+		placement: 'right',
+		container: 'body',
+		title: $("#add-row-popover-head").html(),
+		content: $("#add-row-popover-content").html().replace(/\$rowId/g, rowId)
+	}).popover('toggle');
+	
+	lastPopup = elem;
+	
+	$('.popover').click(function(event) {
+		stopPropagation(event);
+	});
+}
+
+function editColumn(event, elem, columnId, columnLabel) {
+	stopPropagation(event);
+	
+	if (lastPopup && elem !== lastPopup) $(lastPopup).popover('hide');
+	
+	$(elem).popover({
+		html: true,
+		trigger: 'focus',
+		placement: 'left',
+		container: 'body',
+		title: $("#edit-column-popover-head").html(),
+		content: $("#edit-column-popover-content").html().replace(/\$columnId/g, columnId).replace(/\$columnLabel/g, columnLabel)
+	}).popover('toggle');
+	
+	lastPopup = elem;
+	
+	$('.popover').click(function(event) {
+		stopPropagation(event);
+	});
+}
+
+function newColumnAfter(event, elem, columnId) {
+	stopPropagation(event);
+	
+	if (lastPopup && elem !== lastPopup) $(lastPopup).popover('hide');
+	
+	$(elem).popover({
+		html: true,
+		trigger: 'focus',
+		placement: 'left',
+		container: 'body',
+		title: $("#add-column-popover-head").html(),
+		content: $("#add-column-popover-content").html().replace(/\$columnId/g, columnId)
+	}).popover('toggle');
+	
+	lastPopup = elem;
+	
+	$('.popover').click(function(event) {
+		stopPropagation(event);
+	});
 }
 
 function editMatrix() {
@@ -145,11 +280,8 @@ function cancelEdit() {
 
 function saveMatrix() {
 	$.post('/api/matrixes/' + currentMatrix.name, currentMatrix)
-		.done(function(matrix) {
-			currentMatrix = matrix;
-			newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');
-		})
-		.fail(function(err) {newAlert('danger', '<strong>ERROR!</strong>'); console.log(err);})
+		.done(function() {newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');})
+		.fail(function(err) {newAlert('danger', '<strong>ERROR!</strong>'); console.error(err)})
 		.always(function() {hideMatrixEditor();});
 }
 
@@ -201,4 +333,8 @@ $(document).ready(function() {
 		contentMap = generateContentMap(data.contents);
 		renderMatrix({readOnly: true});
 	});
+});
+
+$(document).click(function() {
+	if (lastPopup) $(lastPopup).popover('hide');
 });

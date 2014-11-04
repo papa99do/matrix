@@ -1,47 +1,65 @@
-function addElement(array, elem, index) {
-	// ensure uniqueness
-	if (array.indexOf(elem) >= 0) {
-		return;
+function indexOf(array, id) {
+	for (var i = 0; i < array.length; i++) {
+		if (array[i].id === id) return i;
 	}
-	if (index && index < rows.length) {
+	return -1;
+}
+
+function addElement(array, label, id, index) {	
+	// ensure uniqueness of id
+	if (indexOf(array, id) >= 0) {
+		return 0;
+	}
+	
+	var elem = {id: id, label: label};
+	
+	if (index >= 0 && index < array.length) {
 		array.splice(index, 0, elem);
 	} else {
 		array.push(elem);
 	}
-	console.log('"%s" added, and the new array is now %s', elem, array.join());
-}
-
-function removeElement(array, elem) {
-	// Should not remove the last element
-	if (array.length === 1) {
-		return;
-	}
-	if (array.indexOf(elem) >= 0) {
-		array.splice(array.indexOf(elem), 1);
-	}
 	
-	console.log('"%s" removed, and the new array is now %s', elem, array.join());
+	return 1;
 }
 
-function moveElement(array, elem, offset) {
-	var location = array.indexOf(elem);
-	if (location < 0) {
+function removeElement(array, id) {
+	var index = indexOf(array, id);
+	if (index >= 0) array.splice(index, 1);
+}
+
+function moveElement(array, id, offset) {
+	var index = indexOf(array, id);
+	if (index < 0) {
 		// element does not exist
 		return;
 	}
 	
-	var newLocation = location + offset;
-	if (newLocation < 0 || newLocation > array.length - 1) {
+	var newIndex = index + offset;
+	if (newIndex < 0 || newIndex > array.length - 1) {
 		// cannot move to a non-existing location
 		return;
 	}
 	
-	array.splice(location, 1);
-	array.splice(newLocation, 0, elem);
-	console.log('"%s" moved with offset %d, and the new array is now %s', elem, offset, array.join());
+	var elem = array[index];
+	
+	array.splice(index, 1);
+	array.splice(newIndex, 0, elem);
+}
+
+function changeElement(array, id, label) {
+	var index = indexOf(array, id);
+	if (index >= 0) array[index].label = label;
 }
 
 function newAlert(type, message) {
     $("#alert-area").append($("<div class='alert alert-" + type + " fade in' data-alert><p> " + message + " </p></div>"));
     $(".alert").delay(2000).fadeOut("slow", function () { $(this).remove(); });
+}
+
+function stopPropagation(event) {
+	if (event.stopPropagation) {
+	    event.stopPropagation();   // W3C model
+	} else {
+	    event.cancelBubble = true; // IE model
+	}
 }

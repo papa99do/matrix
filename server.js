@@ -9,8 +9,6 @@ var Matrix     = require('./app/models/matrix');
 var Content    = require('./app/models/content');
 
 // configuration =================
-console.log(process.env);
-
 var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost:27017/matrix';
 
 mongoose.connect(mongoUrl);
@@ -37,14 +35,17 @@ function handleResult(result, res) {
 var router = express.Router();
 router.route('/matrixes/:name')
 .get(function(req, res) {
-	console.log('Getting matrix: ' + req.params.name);
+	var matrixName = req.params.name;
 	
-	Matrix.findOne({name: req.params.name}, function(err, matrix) {
+	console.log('Getting matrix: ' + matrixName);
+	
+	Matrix.findOne({name: matrixName}, function(err, matrix) {
 		if (err) handleError(err, res);
 		console.log(matrix);
 		
 		if (!matrix) {
-			handleResult({matrix: {name: req.params.name, rows:[], columns:[]}, contents: []}, res);
+			matrix = new Matrix({name: matrixName});
+			handleResult({matrix: matrix, contents: []}, res);
 		} else {
 			Content.find({matrix_id: matrix._id}).select('row column').exec(function(err, contents) {
 				if (err) handleError(err, res);
@@ -59,9 +60,14 @@ router.route('/matrixes/:name')
 	Matrix.findOne({name: req.params.name}, function(err, matrix) {
 		if (err) handleError(err, res);
 		
-		if (!matrix) matrix = new Matrix({ name: req.body.name });
-		matrix.rows = req.body.rows;
-		matrix.columns = req.body.columns;
+		if (!matrix) {
+			matrix = new Matrix(req.body);
+		} else {
+			matrix.rows = req.body.rows;
+			matrix.columns = req.body.columns;
+			matrix.nextRowId = req.body.nextRowId;
+			matrix.nextColumnId = req.body.nextColumnId;
+		}
 		
 		matrix.save(function(err, savedMatrix) {
 			if(err) handleError(err, res);

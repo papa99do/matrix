@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var ContentSchema = new Schema({
 	matrix_id: { type: Schema.Types.ObjectId, ref: 'Matrix' },
-	row: String,
-	column: String,
+	row: Number,
+	column: Number,
 	content: String
 });
 

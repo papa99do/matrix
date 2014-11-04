@@ -30,29 +30,6 @@
 
 </head>
 <body>
-	<div id="matrixEditor" class="container matrix-edit">
-		<div class="row">
-			<div class="col-md-6">	
-				<div class="input-group">
-					<span class="input-group-addon">Row</span>
-					<input type="text" class="form-control" placeholder="Row label" id="add-row" />
-					<span class="input-group-btn">
-					    <button class="btn btn-default" type="button" onclick="addRow($('#add-row').val())">Add</button>
-					</span>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="input-group">
-					<span class="input-group-addon">Column</span>
-					<input type="text" class="form-control" placeholder="Column label" id="add-col" />
-					<span class="input-group-btn">
-					    <button class="btn btn-default" type="button" onclick="addColumn($('#add-col').val())">Add</button>
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	
 	<div id="matrix-container"></div>
 	
 	<!-- Code Content Modal -->
@@ -79,5 +56,53 @@
 	
 	<!-- Alert -->
 	<div id="alert-area"></div>
+	
+	<!-- Edit row -->
+	<div id="edit-row-popover-head" class="hide">Edit row</div>
+	<div id="edit-row-popover-content" class="hide">
+		<div class="input-group">
+		  <span class="input-group-addon">Label</span>
+		  <input type="text" id="edit-row-label-input-$rowId" class="form-control" value="$rowLabel">
+		  <span class="input-group-btn">
+	      	<button class="btn btn-primary" type="button" onclick="renameRow($rowId, $('#edit-row-label-input-$rowId').val())">Save</button>
+		  </span>
+		</div>
+	</div>
+	
+	<!-- Add row -->
+	<div id="add-row-popover-head" class="hide">Add row</div>
+	<div id="add-row-popover-content" class="hide">
+		<div class="input-group">
+		  <span class="input-group-addon">Label</span>
+		  <input type="text" id="add-row-label-input-$rowId" class="form-control">
+		  <span class="input-group-btn">
+	      	<button class="btn btn-primary" type="button" onclick="addAfterRow($rowId, $('#add-row-label-input-$rowId').val())">Add</button>
+		  </span>
+		</div>
+	</div>
+	
+	<!-- Edit column -->
+	<div id="edit-column-popover-head" class="hide">Edit column</div>
+	<div id="edit-column-popover-content" class="hide">
+		<div class="input-group">
+		  <span class="input-group-addon">Label</span>
+		  <input type="text" id="edit-column-label-input-$columnId" class="form-control" value="$columnLabel">
+		  <span class="input-group-btn">
+	      	<button class="btn btn-primary" type="button" onclick="renameColumn($columnId, $('#edit-column-label-input-$columnId').val())">Save</button>
+		  </span>
+		</div>
+	</div>
+	
+	<!-- Add column -->
+	<div id="add-column-popover-head" class="hide">Add column</div>
+	<div id="add-column-popover-content" class="hide">
+		<div class="input-group">
+		  <span class="input-group-addon">Label</span>
+		  <input type="text" id="add-column-label-input-$columnId" class="form-control">
+		  <span class="input-group-btn">
+	      	<button class="btn btn-primary" type="button" onclick="addAfterColumn($columnId, $('#add-column-label-input-$columnId').val())">Add</button>
+		  </span>
+		</div>
+	</div>
 </body>
 </html>
