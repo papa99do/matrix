@@ -8,26 +8,24 @@ function convertContentToHtml() {
 	});
 }
 
-function showContent(elem, row, col, contentId) {
-	if (!currentMatrix._id) {
-		newAlert('danger', 'Please save the current matrix first!');
-		return;
-	}
-	
+function showContent(elem, rowId, columnId, contentId) {
 	$selectedCell = $(elem).parent();
 	if (contentId) {
 		$.get('/api/contents/' + contentId, function(data) {
 			currentContent = data;
-			show(row, col, data.content);
+			show(rowId, columnId, data.content);
 		});
 	} else {
-		currentContent = {row: row, column: col, matrix_id: currentMatrix._id};
-		show(row, col, '');
+		currentContent = {rowId: rowId, columnId: columnId, matrixId: currentMatrix._id};
+		show(rowId, columnId, '');
 	}
 }
 
-function show(row, col, content) {
-	$('#contentModalLabel').text(row + ' - ' + col);
+function show(rowId, columnId, content) {
+	var rowLabel = getLabelById(currentMatrix.rows, rowId);
+	var columnLabel = getLabelById(currentMatrix.columns, columnId);
+	
+	$('#contentModalLabel').text(rowLabel + ' - ' + columnLabel);
 	
 	$('#content-markdown').val(content);
 	
@@ -52,8 +50,8 @@ function saveContent() {
 		if (!currentContent._id) {
 			updateContentMap(content);
 			$selectedCell.html(contentColumn({
-				row: content.row,
-				col: content.column,
+				rowId: content.rowId,
+				colId: content.columnId,
 				contentId: content._id
 			}));
 		}
@@ -69,8 +67,8 @@ function saveContent() {
 }
 
 function updateContentMap(content) {
-	if (!contentMap[content.row]) contentMap[content.row] = {};
-	contentMap[content.row][content.column] = content._id;
+	if (!contentMap[content.rowId]) contentMap[content.rowId] = {};
+	contentMap[content.rowId][content.columnId] = content._id;
 }
 
 function previewContent() {

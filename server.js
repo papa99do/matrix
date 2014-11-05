@@ -47,7 +47,7 @@ router.route('/matrixes/:name')
 			matrix = new Matrix({name: matrixName});
 			handleResult({matrix: matrix, contents: []}, res);
 		} else {
-			Content.find({matrix_id: matrix._id}).select('row column').exec(function(err, contents) {
+			Content.find({matrixId: matrix._id}).select('rowId columnId').exec(function(err, contents) {
 				if (err) handleError(err, res);
 				handleResult({matrix: matrix, contents: contents}, res);
 			});
@@ -101,9 +101,9 @@ router.route('/contents')
 	console.log('Saving content: ', req.body);
 	
 	var content = new Content({
-		matrix_id: req.body.matrix_id,
-		row: req.body.row,
-		column: req.body.column,
+		matrixId: req.body.matrixId,
+		rowId: req.body.rowId,
+		columnId: req.body.columnId,
 		content: req.body.content
 	});
 	

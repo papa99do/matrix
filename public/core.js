@@ -5,6 +5,11 @@ function indexOf(array, id) {
 	return -1;
 }
 
+function getLabelById(array, id) {
+	var index = indexOf(array, id);
+	return index < 0 ? '' : array[index].label;
+}
+
 function addElement(array, label, id, index) {	
 	// ensure uniqueness of id
 	if (indexOf(array, id) >= 0) {

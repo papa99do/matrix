@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var ContentSchema = new Schema({
-	matrix_id: { type: Schema.Types.ObjectId, ref: 'Matrix' },
-	row: Number,
-	column: Number,
+	matrixId: { type: Schema.Types.ObjectId, ref: 'Matrix' },
+	rowId: Number,
+	columnId: Number,
 	content: String
 });
 

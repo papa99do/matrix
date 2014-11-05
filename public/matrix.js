@@ -95,9 +95,9 @@ function createMatrixTable(matrixData) {
 		var rowData = [row];
 		$(matrixData.columns).each(function(j, col) {
 			rowData.push({
-				row: row, 
-				col: col, 
-				contentId: contentMap[row] && contentMap[row][col]
+				rowId: row.id, 
+				colId: col.id, 
+				contentId: contentMap[row.id] && contentMap[row.id][col.id]
 			});
 		});
 		matrix.data.push(rowData);
@@ -167,7 +167,7 @@ function labelColumn(row) {
 function contentColumn(data) {
 	var style = data.contentId ? 'glyphicon-star' : 'glyphicon-star-empty';
 	var template = '<a class="content-link" href="#" onclick="showContent(this, ';
-	template += "'" + data.row + "', '" + data.col + "'";
+	template += data.rowId + ", " + data.colId;
 	if (data.contentId) template += ", '" + data.contentId + "'";
 	template += ')"><i class="glyphicon ' + style + '"></i></a>';
 	
@@ -316,8 +316,8 @@ function renderMatrix(option) {
 function generateContentMap(contents) {
 	var map = {};
 	$(contents).each(function(index, content) {
-		if (!map[content.row]) map[content.row] = {};
-		map[content.row][content.column] = content._id;
+		if (!map[content.rowId]) map[content.rowId] = {};
+		map[content.rowId][content.columnId] = content._id;
 	});
 	return map;
 }
