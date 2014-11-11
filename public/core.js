@@ -10,6 +10,11 @@ function getLabelById(array, id) {
 	return index < 0 ? '' : array[index].label;
 }
 
+function getElemById(array, id) {
+	var index = indexOf(array, id);
+	return index < 0 ? null : array[index];
+}
+
 function addElement(array, label, id, index) {	
 	// ensure uniqueness of id
 	if (indexOf(array, id) >= 0) {
@@ -57,7 +62,8 @@ function changeElement(array, id, label) {
 }
 
 function newAlert(type, message) {
-    $("#alert-area").append($("<div class='alert alert-" + type + " fade in' data-alert><p> " + message + " </p></div>"));
+	var alertHtml = '<div class="alert alert-{{type}} fade in" data-alert><p>{{message}}</p></div>';
+	$("#alert-area").append($(populate(alertHtml, {type: type, message: message})));
     $(".alert").delay(2000).fadeOut("slow", function () { $(this).remove(); });
 }
 
@@ -67,4 +73,8 @@ function stopPropagation(event) {
 	} else {
 	    event.cancelBubble = true; // IE model
 	}
+}
+
+function populate(html, params) {
+	return html.replace(/\{\{(\w+)\}\}/g, function(match, name){return params[name];});
 }

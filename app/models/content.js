@@ -5,7 +5,8 @@ var ContentSchema = new Schema({
 	matrixId: { type: Schema.Types.ObjectId, ref: 'Matrix' },
 	rowId: Number,
 	columnId: Number,
-	content: String
+	content: String,
+	fullContent: String
 });
 
 module.exports = mongoose.model('Content', ContentSchema);

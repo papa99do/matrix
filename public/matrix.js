@@ -327,11 +327,14 @@ function getMatrixName() {
 }
 
 $(document).ready(function() {
+	
 	$.get('/api/matrixes/' + getMatrixName(), function(data) {
-		console.log(data);
-		currentMatrix = data.matrix;
-		contentMap = generateContentMap(data.contents);
-		renderMatrix({readOnly: true});
+		//console.log(data);
+		matrixManager.init(data.matrix, data.contents);
+		
+		//currentMatrix = data.matrix;
+		//contentMap = generateContentMap(data.contents);
+		//renderMatrix({readOnly: true});
 	});
 });
 

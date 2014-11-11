@@ -26,34 +26,12 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
 	<script src="/core.js"></script>
 	<script src="/matrix.js"></script>
-	<script src="/content.js"></script>
+	<script src="/matrix-manager.js"></script>
+	<script src="/content-plugin-markdown.js"></script>
 
 </head>
 <body>
 	<div id="matrix-container"></div>
-	
-	<!-- Code Content Modal -->
-	<div class="modal fade" id="content-modal" tabindex="-1" role="dialog" aria-labelledby="contentModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg">
-	    <div class="modal-content">
-	      <div class="modal-header">
-			<span class="pull-right">
-				<button type="button" class="btn btn-default btn-sm" id="edit-content-btn" onclick="toggleContentEditMode(true)">Edit</button>
-				<button type="button" class="btn btn-default btn-sm" id="preview-content-btn" onclick="previewContent()">Preview</button>
-				<button type="button" class="btn btn-primary btn-sm" id="save-content-btn" onclick="saveContent()">Save</button>
-			</span>
-			
-	        <button type="button" class="close pull-left" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	        <h4 class="modal-title" id="contentModalLabel">Content</h4>
-	      </div>
-	      <div class="modal-body">
-	        <textarea class="form-control" rows="10" id="content-markdown"></textarea>
-			<div id="content-html"></div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	
 	<!-- Alert -->
 	<div id="alert-area"></div>
 	

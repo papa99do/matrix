@@ -47,7 +47,7 @@ router.route('/matrixes/:name')
 			matrix = new Matrix({name: matrixName});
 			handleResult({matrix: matrix, contents: []}, res);
 		} else {
-			Content.find({matrixId: matrix._id}).select('rowId columnId').exec(function(err, contents) {
+			Content.find({matrixId: matrix._id}).select('rowId columnId content').exec(function(err, contents) {
 				if (err) handleError(err, res);
 				handleResult({matrix: matrix, contents: contents}, res);
 			});
@@ -88,6 +88,7 @@ router.route('/contents/:id')
 		if (err) handleError(err, res);
 		
 		content.content = req.body.content;
+		content.fullContent = req.body.fullContent;
 		
 		content.save(function(err) {
 			if(err) handleError(err, res);
@@ -104,7 +105,8 @@ router.route('/contents')
 		matrixId: req.body.matrixId,
 		rowId: req.body.rowId,
 		columnId: req.body.columnId,
-		content: req.body.content
+		content: req.body.content,
+		fullContent: req.body.fullContent
 	});
 	
 	content.save(function(err, savedContent) {

@@ -1,4 +1,10 @@
-v0.2.0 (TBD)
+v0.3.0
+* [Framework] Make content viewer/editor as plugin
+* [Product] Support choose of differnt column types
+* [Product] Support basic content types: inline plain text, number(sortable).
+
+
+v0.2.0 (2014-11-05)
 * Access row/column by id, allow change of row/column label
 
 
