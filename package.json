@@ -1,6 +1,6 @@
 {
   "name"         : "Matrix",
-  "version"      : "0.2.0",
+  "version"      : "0.3.0",
   "description"  : "Matrix for production comparison",
   "main"         : "server.js",
   "author"       : "Yihan <yihanzhao@gmail.com>",

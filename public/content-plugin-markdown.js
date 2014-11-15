@@ -65,7 +65,7 @@ function showCurrentContent(editMode) {
 	var rowLabel = matrixManager.getRowLabel(currentContent.rowId);
 	var columnLabel = matrixManager.getColumnLabel(currentContent.columnId);
 	
-	$('#markdown-model-label').text(rowLabel + ' - ' + columnLabel);
+	$('#markdown-modal-label').text(rowLabel + ' - ' + columnLabel);
 	$('#markdown-editor').val(currentContent.fullContent || '');
 	convertContentToHtml();
 	toggleContentEditMode(editMode);

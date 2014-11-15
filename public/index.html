@@ -24,63 +24,24 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
-	<script src="/core.js"></script>
-	<script src="/matrix.js"></script>
 	<script src="/matrix-manager.js"></script>
+	<script src="/matrix-editor.js"></script>
 	<script src="/content-plugin-markdown.js"></script>
 
 </head>
 <body>
 	<div id="matrix-container"></div>
-	<!-- Alert -->
 	<div id="alert-area"></div>
 	
-	<!-- Edit row -->
-	<div id="edit-row-popover-head" class="hide">Edit row</div>
-	<div id="edit-row-popover-content" class="hide">
-		<div class="input-group">
-		  <span class="input-group-addon">Label</span>
-		  <input type="text" id="edit-row-label-input-$rowId" class="form-control" value="$rowLabel">
-		  <span class="input-group-btn">
-	      	<button class="btn btn-primary" type="button" onclick="renameRow($rowId, $('#edit-row-label-input-$rowId').val())">Save</button>
-		  </span>
-		</div>
-	</div>
-	
-	<!-- Add row -->
-	<div id="add-row-popover-head" class="hide">Add row</div>
-	<div id="add-row-popover-content" class="hide">
-		<div class="input-group">
-		  <span class="input-group-addon">Label</span>
-		  <input type="text" id="add-row-label-input-$rowId" class="form-control">
-		  <span class="input-group-btn">
-	      	<button class="btn btn-primary" type="button" onclick="addAfterRow($rowId, $('#add-row-label-input-$rowId').val())">Add</button>
-		  </span>
-		</div>
-	</div>
-	
-	<!-- Edit column -->
-	<div id="edit-column-popover-head" class="hide">Edit column</div>
-	<div id="edit-column-popover-content" class="hide">
-		<div class="input-group">
-		  <span class="input-group-addon">Label</span>
-		  <input type="text" id="edit-column-label-input-$columnId" class="form-control" value="$columnLabel">
-		  <span class="input-group-btn">
-	      	<button class="btn btn-primary" type="button" onclick="renameColumn($columnId, $('#edit-column-label-input-$columnId').val())">Save</button>
-		  </span>
-		</div>
-	</div>
-	
-	<!-- Add column -->
-	<div id="add-column-popover-head" class="hide">Add column</div>
-	<div id="add-column-popover-content" class="hide">
-		<div class="input-group">
-		  <span class="input-group-addon">Label</span>
-		  <input type="text" id="add-column-label-input-$columnId" class="form-control">
-		  <span class="input-group-btn">
-	      	<button class="btn btn-primary" type="button" onclick="addAfterColumn($columnId, $('#add-column-label-input-$columnId').val())">Add</button>
-		  </span>
-		</div>
-	</div>
+	<script type="text/javascript">	
+		$(document).ready(function() {
+			var matrixName = location.pathname.slice(1) || 'polyglot-coder';
+
+			$.get('/api/matrixes/' + matrixName, function(data) {
+				matrixManager.init(data.matrix, data.contents);
+				matrixEditor.init(data.matrix);
+			});
+		});
+	</script>
 </body>
 </html>
