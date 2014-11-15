@@ -30,7 +30,7 @@ var getFullContent = function getFullContent(contentId, callback) {
 };
 
 var saveContent = function saveContent(content, doneCallback, failCallback) {
-	if (!currentMatrix.__v) {
+	if (currentMatrix.__v === undefined) {
 		return newAlert('danger', '<strong>ERROR!</strong> Please save the matrix first!');
 	}
 		
@@ -112,7 +112,7 @@ function createContentMap(contents) {
 	$(contents).each(function(index, content) {setContent(content)});
 };
 
-function renderMatrix(matrix) {
+var renderMatrix = function renderMatrix(matrix) {
 	
 	currentMatrix = matrix;
 	

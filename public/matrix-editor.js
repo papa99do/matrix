@@ -130,9 +130,12 @@ var init = function init(matrix) {
 
 var saveMatrix = function saveMatrix() {
 	$.post('/api/matrixes/' + currentMatrix.name, currentMatrix)
-		.done(function() {newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');})
-		.fail(function(err) {newAlert('danger', '<strong>ERROR!</strong>'); console.error(err)})
-		.always(function() {hideMatrixEditor();});
+		.done(function(matrix) {
+			newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');
+			matrixManager.renderMatrix(matrix);
+			init(matrix);
+		})
+		.fail(function(err) {newAlert('danger', '<strong>ERROR!</strong>'); console.error(err)});
 };
 
 var editMatrix = function editMatrix() {
