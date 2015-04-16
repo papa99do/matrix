@@ -54,5 +54,9 @@ a.cell-link {
 }
 
 #matrix-list > a {
-	margin: 5px;
+	margin: 10px;
+}
+
+#nav {
+	margin-bottom: 0px;
 }
