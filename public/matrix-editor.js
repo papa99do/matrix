@@ -1,5 +1,5 @@
 var matrixEditor = (function($, matrixManager){
-		
+
 var currentMatrix;	// currentMatrix
 var oldMatrix;
 var MQ = $({}); // simple mq
@@ -17,15 +17,15 @@ function addAfter(array, id, newElem) {
 	if (indexOf(array, newElem.id) >= 0) {
 		return MQ.trigger('/error/add-duplicate');
 	}
-	
+
 	var index = indexOf(array, id) + 1;
-	
+
 	if (index >= 0 && index < array.length) {
 		array.splice(index, 0, newElem);
 	} else {
 		array.push(newElem);
 	}
-	
+
 	MQ.trigger('/done/added', newElem);
 }
 
@@ -45,18 +45,18 @@ function move(array, id, offset) {
 	if (index < 0) {
 		return;
 	}
-	
+
 	var newIndex = index + offset;
 	if (newIndex < 0 || newIndex > array.length - 1) {
 		// cannot move to a non-existing location
 		return MQ.trigger('/error/move-out-of-boundary');
 	}
-	
+
 	var elem = array[index];
-	
+
 	array.splice(index, 1);
 	array.splice(newIndex, 0, elem);
-	
+
 	MQ.trigger('/done/moved');
 }
 
@@ -70,9 +70,9 @@ function edit(array, newElem) {
 
 function stopPropagation(event) {
 	if (event.stopPropagation) {
-	    event.stopPropagation();   // W3C model
+	  event.stopPropagation();   // W3C model
 	} else {
-	    event.cancelBubble = true; // IE model
+	  event.cancelBubble = true; // IE model
 	}
 }
 
@@ -86,8 +86,8 @@ function hidePopup(exceptForElem) {
 var editPopupActionMap = {
 	'editRow'		: {title: 'Edit row', callback: 'window.editor.editRow', place: 'right'},
 	'addRowAfter'	: {title: 'Add row'	, callback: 'window.editor.addRowAfter', place: 'right'},
-	'editColumn'	: {title: 'Edit column', callback: 'window.editor.editColumn', place: 'bottom'},
-	'addColumnAfter': {title: 'Add column', callback: 'window.editor.addColumnAfter', place: 'bottom'},
+	'editColumn'	: {title: 'Edit column', callback: 'window.editor.editColumn', place: 'left'},
+	'addColumnAfter': {title: 'Add column', callback: 'window.editor.addColumnAfter', place: 'left'},
 }
 
 function showEditPopup(event, elem, id, label, actionName) {
@@ -100,29 +100,29 @@ function showEditPopup(event, elem, id, label, actionName) {
 		  </span>\
 		</div>\
 	';
-	
+
 	var action = editPopupActionMap[actionName];
-	
+
 	stopPropagation(event);
-	
+
 	hidePopup(elem);
-	
+
 	$(elem).popover({
 		html: true,
-		trigger: 'focus',
+		trigger: 'manual',
 		placement: action.place,
 		container: 'body',
 		title: action.title,
 		content: populate(contentTemplate, {id: id, label:label, action: action.callback})
 	}).popover('toggle');
-	
+
 	lastPopup = elem;
-	
+
 	$('.popover').click(function(event) {
 		stopPropagation(event);
 	});
 }
-		
+
 var init = function init(matrix) {
 	currentMatrix = matrix;
 	hideMatrixEditor();
@@ -218,26 +218,26 @@ MQ.on('/done/added /done/moved /done/removed /done/edited', function() {
 $(document).click(function() {
 	hidePopup();
 });
-	
+
 return {
 	init: init,
 	saveMatrix: saveMatrix,
 	editMatrix: editMatrix,
 	cancelEdit: cancelEdit,
 	showEditPopup: showEditPopup,
-	
+
 	addRowAfter	: function(id, label) {addAfter(currentMatrix.rows, id, {id: currentMatrix.nextRowId++, label: label}); },
 	editRow		: function(id, label) {edit(currentMatrix.rows, {id: id, label: label})},
 	removeRow	: function(id) {remove(currentMatrix.rows, id); },
 	moveRowUp	: function(id) {move(currentMatrix.rows, id, -1); },
 	moveRowDown	: function(id) {move(currentMatrix.rows, id, 1); },
-	
+
 	addColumnAfter	: function(id, label) {addAfter(currentMatrix.columns, id, {id: currentMatrix.nextColumnId++, label: label}); },
 	editColumn		: function(id, label) {edit(currentMatrix.columns, {id: id, label: label})},
 	removeColumn	: function(id) {remove(currentMatrix.columns, id); },
 	moveColumnLeft	: function(id) {move(currentMatrix.columns, id, -1); },
 	moveColumnRight	: function(id) {move(currentMatrix.columns, id, 1); }
-	
+
 };
 
 })(jQuery, matrixManager);
