@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
 	<title>Matrix</title>
-	
+
 	<link rel="shortcut icon" href="/favicon.ico?v=2" type="image/x-icon">
 
 	<!-- SCROLLS -->
@@ -30,17 +30,29 @@
 
 </head>
 <body>
+	<div id="matrix-list" class="container"></div>
 	<div id="matrix-container"></div>
 	<div id="alert-area"></div>
-	
-	<script type="text/javascript">	
-		$(document).ready(function() {
-			var matrixName = location.pathname.slice(1) || 'polyglot-coder';
 
-			$.get('/api/matrixes/' + matrixName, function(data) {
-				matrixManager.init(data.matrix, data.contents);
-				matrixEditor.init(data.matrix);
-			});
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var matrixName = location.pathname.slice(1);
+
+			if (!matrixName) {
+				$.get('/api/matrixes', function(matrixes) {
+					//$('#matrix-list').html(JSON.stringify(data));
+					matrixes.forEach(function(matrix) {
+						var matrixLink = $('<a class="col-sm-3 btn btn-primary" href="'
+						 	+ matrix.name + '">' + matrix.name + '</a>');
+						$('#matrix-list').append(matrixLink);
+					});
+				});
+			} else {
+				$.get('/api/matrixes/' + matrixName, function(data) {
+					matrixManager.init(data.matrix, data.contents);
+					matrixEditor.init(data.matrix);
+				});
+			}
 		});
 	</script>
 </body>

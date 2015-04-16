@@ -33,22 +33,30 @@ function handleResult(result, res) {
 
 // configuration of the router
 var router = express.Router();
+
+router.route('/matrixes')
+.get(function(req, res) {
+	Matrix.find().select('-_id name').exec(function(err, matrixes) {
+		if (err) return handleError(err, res);
+		handleResult(matrixes, res);
+	});
+});
+
 router.route('/matrixes/:name')
 .get(function(req, res) {
 	var matrixName = req.params.name;
-	
+
 	console.log('Getting matrix: ' + matrixName);
-	
+
 	Matrix.findOne({name: matrixName}, function(err, matrix) {
-		if (err) handleError(err, res);
-		console.log(matrix);
-		
+		if (err) return handleError(err, res);
+
 		if (!matrix) {
 			matrix = new Matrix({name: matrixName});
 			handleResult({matrix: matrix, contents: []}, res);
 		} else {
 			Content.find({matrixId: matrix._id}).select('rowId columnId content').exec(function(err, contents) {
-				if (err) handleError(err, res);
+				if (err) return handleError(err, res);
 				handleResult({matrix: matrix, contents: contents}, res);
 			});
 		}
@@ -56,10 +64,10 @@ router.route('/matrixes/:name')
 })
 .post(function(req, res) {
 	console.log('Saving matrix: ', req.body);
-	
+
 	Matrix.findOne({name: req.params.name}, function(err, matrix) {
-		if (err) handleError(err, res);
-		
+		if (err) return handleError(err, res);
+
 		if (!matrix) {
 			matrix = new Matrix(req.body);
 		} else {
@@ -68,9 +76,9 @@ router.route('/matrixes/:name')
 			matrix.nextRowId = req.body.nextRowId;
 			matrix.nextColumnId = req.body.nextColumnId;
 		}
-		
+
 		matrix.save(function(err, savedMatrix) {
-			if(err) handleError(err, res);
+			if(err) return handleError(err, res);
 			handleResult(savedMatrix, res);
 		});
 	});
@@ -79,19 +87,19 @@ router.route('/matrixes/:name')
 router.route('/contents/:id')
 .get(function(req, res) {
 	Content.findById(req.params.id, function(err, content) {
-		if (err) handleError(err, res);
+		if (err) return handleError(err, res);
 		handleResult(content, res);
 	});
 })
 .post(function(req, res) {
 	Content.findById(req.params.id, function(err, content) {
-		if (err) handleError(err, res);
-		
+		if (err) return handleError(err, res);
+
 		content.content = req.body.content;
 		content.fullContent = req.body.fullContent;
-		
+
 		content.save(function(err) {
-			if(err) handleError(err, res);
+			if(err) return handleError(err, res);
 			handleResult({message: 'Content updated!'}, res);
 		});
 	});
@@ -100,7 +108,7 @@ router.route('/contents/:id')
 router.route('/contents')
 .post(function(req, res) {
 	console.log('Saving content: ', req.body);
-	
+
 	var content = new Content({
 		matrixId: req.body.matrixId,
 		rowId: req.body.rowId,
@@ -108,9 +116,9 @@ router.route('/contents')
 		content: req.body.content,
 		fullContent: req.body.fullContent
 	});
-	
+
 	content.save(function(err, savedContent) {
-		if(err) handleError(err, res);
+		if(err) return handleError(err, res);
 		handleResult(savedContent, res);
 	});
 });
@@ -123,6 +131,6 @@ app.get('*', function(req, res) {
 
 
 // listen (start app with node server.js) ======================================
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3002;
 app.listen(port);
 console.log("App listening on port " + port);

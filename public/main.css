@@ -42,13 +42,17 @@ a.cell-link {
     position: fixed;
     z-index: 2000;
     display: block;
-    top: 100px;                                                                                                  
-    width: 300px;                                                                                                
-    left: 50%;                                                                                                   
-    margin-left:-150px;                                                                                          
+    top: 100px;
+    width: 300px;
+    left: 50%;
+    margin-left:-150px;
 }
 
 #matrixEditor {
 	margin-bottom: 10px;
 	display: none;
+}
+
+#matrix-list > a {
+	margin: 5px;
 }
