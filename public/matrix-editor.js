@@ -129,6 +129,7 @@ var init = function init(matrix) {
 };
 
 var saveMatrix = function saveMatrix() {
+	hidePopup();
 	$.post('/api/matrixes/' + currentMatrix.name, currentMatrix)
 		.done(function(matrix) {
 			newAlert('success', 'Matrix ' + currentMatrix.name + ' saved!');
@@ -144,6 +145,7 @@ var editMatrix = function editMatrix() {
 };
 
 var cancelEdit = function cancelEdit() {
+	hidePopup();
 	currentMatrix = oldMatrix;
 	matrixManager.renderMatrix(currentMatrix);
 	hideMatrixEditor();
