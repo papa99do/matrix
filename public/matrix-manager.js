@@ -93,7 +93,7 @@ function reRender(content) {
 
 function renderContent(content) {
 	var hookInput = populate('<input type="hidden" id="content-{{rowId}}-{{columnId}}">', content);
-	var rowType = getElemById(currentMatrix.rows, content.rowId).type || DEFAULT_ROW_TYPE;
+	var rowType = getElemById(currentMatrix.rows, content.rowId).rowType || DEFAULT_ROW_TYPE;
 	return hookInput + contentPlugins[rowType].renderContent(content);
 }
 

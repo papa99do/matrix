@@ -98,9 +98,9 @@ router.route('/contents/:id')
 		content.content = req.body.content;
 		content.fullContent = req.body.fullContent;
 
-		content.save(function(err) {
+		content.save(function(err, savedContent) {
 			if(err) return handleError(err, res);
-			handleResult({message: 'Content updated!'}, res);
+			handleResult(savedContent, res);
 		});
 	});
 });
