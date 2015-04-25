@@ -10,14 +10,14 @@ var convertContentToHtml = function convertContentToHtml() {
 	    hljs.highlightBlock(block);
 	});
 };
-	
+
 var renderContent = function renderContent(content) {
-	
+
 	var html = '\
 		<a class="cell-link" href="#" onclick="window.plugins.md.showContent({{rowId}}, {{columnId}})">\
 			<i class="glyphicon glyphicon-{{star}}"></i>\
 		</a>';
-	
+
 	return populate(html, {
 		rowId: content.rowId,
 		columnId: content.columnId,
@@ -48,9 +48,9 @@ var sharedHtml = '\
 ';
 
 var showContent = function showContent(rowId, columnId) {
-	
+
 	currentContent = matrixManager.getContent(rowId, columnId);
-	
+
 	if (!currentContent._id) {
 		showCurrentContent(true);
 	} else {
@@ -64,12 +64,12 @@ var showContent = function showContent(rowId, columnId) {
 function showCurrentContent(editMode) {
 	var rowLabel = matrixManager.getRowLabel(currentContent.rowId);
 	var columnLabel = matrixManager.getColumnLabel(currentContent.columnId);
-	
+
 	$('#markdown-modal-label').text(rowLabel + ' - ' + columnLabel);
 	$('#markdown-editor').val(currentContent.fullContent || '');
 	convertContentToHtml();
 	toggleContentEditMode(editMode);
-	
+
 	$('#markdown-modal').modal('show');
 }
 
@@ -95,15 +95,15 @@ var saveContent = function saveContent() {
 		convertContentToHtml();
 		toggleContentEditMode(false);
 	});
-};	
-	
+};
+
 matrixManager.registerPlugin({
 	name: 'md',
-	displayName: 'Standalone markdown text',
+	displayName: 'Markdown',
 	lazyLoading: true,
 	renderContent: renderContent,
 	sharedHtml: sharedHtml,
-	
+
 	// exported to be used by self
 	showContent: showContent,
 	toggleContentEditMode: toggleContentEditMode,
@@ -111,6 +111,6 @@ matrixManager.registerPlugin({
 	saveContent: saveContent
 
 });
-	
-	
+
+
 })(jQuery, matrixManager);

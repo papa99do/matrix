@@ -60,3 +60,7 @@ a.cell-link {
 #nav {
 	margin-bottom: 0px;
 }
+
+.popover{
+  max-width:600px;
+}

@@ -63,7 +63,7 @@ function move(array, id, offset) {
 function edit(array, newElem) {
 	var index = indexOf(array, newElem.id);
 	if (index >= 0) {
-		array[index] = newElem;
+		array[index].label = newElem.label;
 		MQ.trigger('/done/edited');
 	}
 }
@@ -83,20 +83,39 @@ function hidePopup(exceptForElem) {
 	}
 }
 
+
+function getTypeSelectHtml() {
+	var typeSelectTemplate = '\
+		<span class="input-group-addon">Type</span>\
+		<select class="form-control" id="edit-type-input">{{options}}</select>\
+	';
+	var optionsTemplate = '<option value="{{name}}">{{displayName}}</option>';
+
+	var optionsHtml = '';
+	for (var name in matrixManager.contentPlugins) {
+		optionsHtml += populate(optionsTemplate, matrixManager.contentPlugins[name]);
+	}
+
+	return populate(typeSelectTemplate, {options: optionsHtml});
+}
+
+
 var editPopupActionMap = {
 	'editRow'		: {title: 'Edit row', callback: 'window.editor.editRow', place: 'right'},
-	'addRowAfter'	: {title: 'Add row'	, callback: 'window.editor.addRowAfter', place: 'right'},
+	'addRowAfter'	: {title: 'Add row'	, callback: 'window.editor.addRowAfter', place: 'right', typeSelect: true},
 	'editColumn'	: {title: 'Edit column', callback: 'window.editor.editColumn', place: 'left'},
 	'addColumnAfter': {title: 'Add column', callback: 'window.editor.addColumnAfter', place: 'left'},
-}
+};
+
 
 function showEditPopup(event, elem, id, label, actionName) {
 	var contentTemplate = '\
-		<div class="input-group">\
+		<div class="input-group" style="width: {{width}}px;">\
 		  <span class="input-group-addon">Label</span>\
 		  <input type="text" id="edit-label-input" class="form-control" value="{{label}}">\
+			{{typeSelect}}\
 		  <span class="input-group-btn">\
-	      	<button class="btn btn-primary" type="button" onclick="{{action}}({{id}}, $(\'#edit-label-input\').val())">Save</button>\
+	      	<button class="btn btn-primary" type="button" onclick="{{onclick}}">Save</button>\
 		  </span>\
 		</div>\
 	';
@@ -113,7 +132,16 @@ function showEditPopup(event, elem, id, label, actionName) {
 		placement: action.place,
 		container: 'body',
 		title: action.title,
-		content: populate(contentTemplate, {id: id, label:label, action: action.callback})
+		content: populate(contentTemplate, {
+			label:label,
+			action: action.callback,
+			onclick: populate(action.typeSelect ?
+				'{{callback}}({{id}}, $(\'#edit-label-input\').val(), $(\'#edit-type-input\').val())' :
+				'{{callback}}({{id}}, $(\'#edit-label-input\').val())',
+				{callback: action.callback, id: id}),
+			typeSelect: action.typeSelect ? getTypeSelectHtml() : '',
+			width: action.typeSelect ? '500' : '300'
+		})
 	}).popover('toggle');
 
 	lastPopup = elem;
@@ -228,7 +256,7 @@ return {
 	cancelEdit: cancelEdit,
 	showEditPopup: showEditPopup,
 
-	addRowAfter	: function(id, label) {addAfter(currentMatrix.rows, id, {id: currentMatrix.nextRowId++, label: label}); },
+	addRowAfter	: function(id, label, rowType) {addAfter(currentMatrix.rows, id, {id: currentMatrix.nextRowId++, label: label, rowType: rowType}); },
 	editRow		: function(id, label) {edit(currentMatrix.rows, {id: id, label: label})},
 	removeRow	: function(id) {remove(currentMatrix.rows, id); },
 	moveRowUp	: function(id) {move(currentMatrix.rows, id, -1); },

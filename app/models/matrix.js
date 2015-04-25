@@ -3,8 +3,10 @@ var Schema = mongoose.Schema;
 
 var MatrixSchema = new Schema({
 	name: String,
-	rows: { type: [{id: Number, label: String, _id:false}], default: [{id: 1, label:'first row'}] },
-	columns: { type: [{id: Number, label: String, _id:false}], default: [{id: 1, label:'first column'}] },
+	rows: { type: [{id: Number, label: String, rowType: String, _id:false}],
+					default: [{id: 1, label:'first row', rowType: 'md'}] },
+	columns: { type: [{id: Number, label: String, _id:false}],
+						 default: [{id: 1, label:'first column'}] },
 	nextRowId: { type: Number, default: 2 },
 	nextColumnId: { type: Number, default: 2 }
 });

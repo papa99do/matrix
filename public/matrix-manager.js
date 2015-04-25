@@ -10,8 +10,8 @@ function populate(template, params) {
 
 
 var matrixManager = (function matrixManager($) {
-	
-var DEFAULT_COLUMN_TYPE = 'md';
+
+var DEFAULT_ROW_TYPE = 'md';
 var currentMatrix;
 var contentMap;
 var contentPlugins = {};
@@ -33,11 +33,11 @@ var saveContent = function saveContent(content, doneCallback, failCallback) {
 	if (currentMatrix.__v === undefined) {
 		return newAlert('danger', '<strong>ERROR!</strong> Please save the matrix first!');
 	}
-		
+
 	var url = '/api/contents';
-	if (content._id) url = url + '/' + content._id; 
+	if (content._id) url = url + '/' + content._id;
 	if (!content.matrixId) content.matrixId = currentMatrix._id;
-	
+
 	$.post(url, content)
 	.done(function(content) {
 		changeContent(content);
@@ -56,10 +56,10 @@ var registerPlugin = function registerPlugin(plugin) {
 		console.error('Cannot register duplicate plugin: ', plugin.displayName);
 		return;
 	}
-	
+
 	contentPlugins[plugin.name] = plugin;
 	columnTypes[plugin.name] = plugin.displayName;
-	
+
 	if (plugin.sharedHtml) {
 		sharedHtmls = sharedHtmls + plugin.sharedHtml;
 	}
@@ -93,8 +93,8 @@ function reRender(content) {
 
 function renderContent(content) {
 	var hookInput = populate('<input type="hidden" id="content-{{rowId}}-{{columnId}}">', content);
-	var columnType = getElemById(currentMatrix.columns, content.columnId).type || DEFAULT_COLUMN_TYPE;
-	return hookInput + contentPlugins[columnType].renderContent(content);
+	var rowType = getElemById(currentMatrix.rows, content.rowId).type || DEFAULT_ROW_TYPE;
+	return hookInput + contentPlugins[rowType].renderContent(content);
 }
 
 function setContent(content) {
@@ -103,21 +103,21 @@ function setContent(content) {
 };
 
 var getContent = function getContent(rowId, columnId) {
-	return contentMap[rowId] && contentMap[rowId][columnId] 
+	return contentMap[rowId] && contentMap[rowId][columnId]
 			|| {rowId: rowId, columnId: columnId, content: ''};
 }
-	
+
 function createContentMap(contents) {
 	contentMap = {};
 	$(contents).each(function(index, content) {setContent(content)});
 };
 
 var renderMatrix = function renderMatrix(matrix) {
-	
+
 	currentMatrix = matrix;
-	
+
 	$('#matrix-container').html('<table id="matrix" class="display cell-border"></table>');
-	
+
 	var table =  $('#matrix').dataTable( {
 	        data: getMatrixData(),
 	        columns: getColumnConfig(),
@@ -142,7 +142,7 @@ function getColumnConfig() {
 		render: renderers.firstColumnContent,
 		class: 'label-column'
 	});
-	
+
 	$(currentMatrix.columns).each(function(i, column) {
 		columns.push({
 			title: renderers.contentColumnTitle(column),
@@ -178,7 +178,7 @@ return {
 	init: init,
 	renderMatrix: renderMatrix
 };
-	
+
 
 })(jQuery);
 
