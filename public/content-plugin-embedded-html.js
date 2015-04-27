@@ -18,7 +18,11 @@ var renderContent = function renderContent(content) {
 			</div>\
 		</div>';
 
-	return populate(html, content);
+	return populate(html, {
+		content: content.content || '&nbsp;',
+		rowId: content.rowId,
+		columnId: content.columnId
+	});
 };
 
 var sharedHtml = '\
