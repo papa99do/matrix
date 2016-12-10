@@ -9,7 +9,7 @@ var Matrix     = require('./app/models/matrix');
 var Content    = require('./app/models/content');
 
 // configuration =================
-var mongoUrl = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/matrix';
+var mongoUrl = process.env.MONGODB_URI || 'mongodb://localhost:27017/matrix';
 
 mongoose.connect(mongoUrl);
 mongoose.set('debug', true)
