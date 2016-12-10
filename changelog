@@ -1,11 +1,13 @@
+v0.3.2
+* [Product] Add a landing page to list all matrices
+
 v0.3.1
 * [Product] Support basic content types: inline plain text, number(sortable).
-
 
 v0.3.0 (2014-11-15)
 * [Framework] Make content viewer/editor as plugin
 * [Product] Support choose of differnt column types
-* [Refactoring] Encapsulate matrixManager and matrixEditor 
+* [Refactoring] Encapsulate matrixManager and matrixEditor
 
 v0.2.0 (2014-11-05)
 * Access row/column by id, allow change of row/column label
